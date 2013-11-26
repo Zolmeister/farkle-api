@@ -15,7 +15,6 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
@@ -222,18 +221,21 @@ function maxScore(dice){
 //testing
 /*var game = newGame(null, 1)
 GAMES[game.id] = game
-app.all('/create', function(req, res) {
-  var game = newGame(req.param('maxPlayers'))
-  GAMES[game.id] = game
-  res.json(game)
-})
 var user = newUser('Zolmeister', 1)
 GAMES[1].players.push(user)
 if(GAMES[1].turn === -1){
   GAMES[1].turn = 0
   roll(GAMES[1])
 }
+
 */
+
+
+app.all('/create', function(req, res) {
+  var game = newGame(req.param('maxPlayers'))
+  GAMES[game.id] = game
+  res.json(game)
+})
 
 app.all('/:gameid/play', function(req, res) {
   var gameid = req.param('gameid')
@@ -241,6 +243,9 @@ app.all('/:gameid/play', function(req, res) {
   var token = req.param('token')
   if (!token || !isTurn(GAMES[gameid], token)) return res.json({err:'not your turn'})
   applyMove(GAMES[gameid], req.param('keep'), req.param('stop'))
+  if(!GAMES[gameid].started){
+    GAMES[gameid].started = true
+  }
   res.json(GAMES[gameid])
 })
 

@@ -1,5 +1,42 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Farkle API - v0.0.1
+  h4 By Zolmeister
+  br
+  h2 Objects
+  p.
+    Game
+      {
+      id: id,
+      players: [ Players ],
+      turn: -1,
+      roll: [ ],
+      currentScore : 0,
+      started: false,
+      maxPlayers: 99999999999999999
+    }
+  p.
+    Player
+    {
+      username: username,
+      score: 0
+    }
+    
+  h2 create game
+  p /create -> Game
+  p optional: maxPlayers - int
+    
+  h2 get game state
+  p /:gameid/state -> Game
+  
+  h2 join game
+  p /:gameid/join -> {game: Game, token: secret_token}
+  p required: username - string
+  
+  h2 make move
+  p /:gameid/play -> Game
+  p required: token - secret_token
+  p required: keep - comma separated list of numbers
+  p optional: stop - bool
+  
